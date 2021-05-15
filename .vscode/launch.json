@@ -8,15 +8,19 @@
         "name": "Npm Launch via NPM",
         "request": "launch",
         "runtimeArgs": [
-            "run-script",
-            "debug"
+            "run",
+            "start"
         ],
         "runtimeExecutable": "npm",
         "skipFiles": [
             "<node_internals>/**"
         ],
-        "type": "pwa-node",
-        "program": "${workspaceFolder}/ui"
+        "type": "node",
+        "cwd": "${workspaceFolder}/ui",
+        "resolveSourceMapLocations": [
+            "${workspaceFolder}/**",
+            "!**/node_modules/**"
+        ]
     },
         {
             "name": "Go Launch Package",

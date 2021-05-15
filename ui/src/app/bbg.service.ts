@@ -11,6 +11,8 @@ export class BbgService {
   constructor(private httpClient: HttpClient) {   }
   search(name: string) {
     const sUrl = this.bbgapiSearchUrl + "?search=" + name;
+    console.log("searching");
+    console.log(sUrl);
     return this.httpClient.get(sUrl).pipe(tap(d => {
       console.log(d);
     }));
