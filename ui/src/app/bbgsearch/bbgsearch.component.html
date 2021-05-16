@@ -1,1 +1,25 @@
-<p>bbgsearch works!</p>
+<div >
+  <div class="field">
+    <label class="label">Spiel suchen</label>
+    <div class="control has-icons-left has-icons-right">
+    <input class="input" appDelayedInput [delayTime]=600 type="text" [disabled]="isSearching" name="bbg_search" placeholder="min 4 Zeichen" (delayedInput)="onSearch($event)" [(ngModel)]="searchText"/>
+    <span class="icon is-small is-left">
+      <i class="fas fa-dice"></i>
+    </span>
+    <span class="icon is-small is-right" *ngIf="isSearching">
+      <i class="fas fa-lock"></i>
+    </span>
+  </div>
+  </div>
+  <div class="block">
+    <h2 class="subtitle">Suchergebnisse</h2>
+    <progress class="progress is-small is-info" max="100" *ngIf="isSearching">15%</progress>
+    <ul class="searchList" *ngIf="!selectionIsShown">
+      <li class="searchItem" *ngFor="let item of items" (click)="onItemSelect(item)">{{item.Name}}&nbsp;<b>{{item.Published}}</b></li>
+    </ul>
+  </div>
+  <div class="block" *ngIf="selectionIsShown">
+    <button class="button is-text is-small" (click)="selectionIsShown=false">zurück</button>
+    <app-game [game]="selectedGame" *ngIf="selectedGame != undefined"></app-game>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="columns">
+  <div class="column">
+    <div class="content is-normal">
+    <h1 class="title">Abstimmung</h1>
+    <ul class="surveyList">
+      <li class="vote-item" *ngFor="let item of list.items">
+        <app-voteitem [item]="item"></app-voteitem>
+      </li>
+    </ul>
+  </div>
+  </div>
+  <div class="column">
+    <div class="card">
+      <div class="card-header">
+        <div class="block">
+          <h2 class="card-header-title">Vorschlag erstellen</h2>
+        </div>
+      </div>
+      <div class="card-content">
+        <div class="buttons">
+          <button class="button is-primary" [class.is-outlined]="!suggestGame" (click)="suggestGame = true">
+            <span class="icon">
+              <i class="fas fa-dice"></i>
+            </span>
+          <span>ein Spiel</span>
+          </button>
+          <button class="button is-primary" [class.is-outlined]="suggestGame"  (click)="suggestGame = false">
+            <span class="icon">
+            <i class="fas fa-crown"></i>
+          </span>
+          <span>eine Gruppe von Spielen</span>
+          </button>
+        </div>
+        <div class="block">
+          <app-bbgsearch *ngIf="suggestGame"></app-bbgsearch>
+          <app-categorie *ngIf="!suggestGame"></app-categorie>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

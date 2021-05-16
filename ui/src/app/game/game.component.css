@@ -1,0 +1,16 @@
+.tags{
+  font-weight: 200;
+  font-size: 10px;
+  margin: 0.4em;
+  padding: 0.4em;
+  display: inline-block;
+  border: solid 1px  grey;
+  background-color: lightgrey;
+}
+.game-thumb {
+  width: 3rem;
+  height: 3rem;
+}
+.game-image{
+  margin: 0.6em;
+}

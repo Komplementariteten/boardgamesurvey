@@ -1,0 +1,12 @@
+<div>
+  <div class="block">
+    <div class="field">
+    <label for="title" >Title: </label>
+    <input class="input" type="text" [(ngModel)]="title" name="title" placeholder="z.B.: 2 Spieler Spiel"/>
+  </div>
+  <div class="field"><label for="desc" >Beschreibung</label>
+    <textarea class="textarea" name="desc" [(ngModel)]="description" cols="50" rows="10" placeholder="Beschreibe den Vorschlag"></textarea></div>
+  </div>
+  <button class="block button is-info" (click)="add()">Vorschlag machen</button>
+  <p class="block">In der Abstimmung sollen dem Vorstand nicht nur einzele Spiele vorgeschlagen werden, sondern auch offener formulierte Wünsche nach denen der Vorstand Spiele auswählen kann.</p>
+</div>

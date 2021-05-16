@@ -1,0 +1,23 @@
+<footer class="footer infotext" *ngIf="showInfoText">
+  <button class="hide-infotext button is-danger is-outlined" (click)="showInfoText=false">
+    <span>Ausblenden</span>
+    <span class="icon is-small">
+      <i class="fas fa-times"></i>
+    </span>
+  </button>
+  <div class="content">
+    <div class="columns">
+      <div class="column">
+        Auf dieser Seite können Mitglieder und assozierte Personen des Brettspiel-Vereins Lingen über Brettspiel Neuanschaffungen abstimmen.
+        Vorschläge können über die Eingabe auf der rechten Seite erstellt werden. Spiele werden um die Eingabe zu erleichtern über die Datenbank von
+        <a target="_blank" class="bbg-link" href="https://boardgamegeek.com/wiki/page/BGG_XML_API&redirectedfrom=XML_API#">Boardgame Geek</a> gesucht.
+        <div class="block"  style="padding: 0.2em; width: 5em; background-color: #3f3a60!important;">
+        <a target="_blank" href="https://www.boardgamegeek.com/">
+          <img style="width: 100%; height: auto;" src="https://cf.geekdo-static.com/images/logos/bgg-primary-logo-reverse.svg"/></a>
+      </div></div>
+      <div class="column">
+        Diese Seite verwendet einen technischen Cookie um sicher zu stellen das nur eine Stimme abegeben wird. Der Fairnis halber bitte ich euch diesen nicht zu entfernen oder auf den Inkognito modus zu verzichten, anderfalls kann mehrfaches Abstimmen nicht verhindert werden.
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,20 @@
+<div class="voteitem box">
+  <a class="clickable" (click)="showInfo=!showInfo" >{{item?.Title}}&nbsp;</a>
+  <div class="itemDesc message" *ngIf="showInfo">
+    <div class="message-header">Beschreibung</div>
+    <div class="message-body" *ngIf="item?.Ref != undefined">
+      <p class="block">{{item?.Ref?.Name}}</p>
+      <img class="block" src={{item?.Ref?.Image}} />
+      <a class="button block is-link" href="https://www.boardgamegeek.com/boardgame/{{item?.Ref?.ObjectId}}" target="_blank">
+        <span class="icon">
+        <i class="fas fa-external-link-alt"></i>
+      </span>
+      <span>auf Boardgame Geek ansehen</span></a>
+    </div>
+    <div class="message-body" *ngIf="item?.Ref == undefined">
+      {{item?.Description}}
+    </div>
+  </div>
+  <span class="voteCount">Stimmen: {{item?.Votes}}</span>
+  <mat-icon class="clickable" (click)="vote()" *ngIf="votes.canVote()">thumb_up</mat-icon>
+</div>

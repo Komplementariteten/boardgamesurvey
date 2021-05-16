@@ -1,0 +1,15 @@
+.itemDesc{
+  border: solid 1px lightgrey;
+  background-color: white;
+}
+.clickable{
+  vertical-align: top;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+.voteCount {
+  vertical-align: top;
+  display: inline-block;
+  margin: 0.5em;
+}

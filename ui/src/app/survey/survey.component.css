@@ -1,0 +1,23 @@
+.vote-item{
+  display: inline-block;
+  list-style: none;
+}
+.addPopup {
+  margin: 0.4em;
+  padding: 0.4em;
+  border: solid 1px rgb(245, 80, 62);
+  background-color: rgb(255, 190, 164);
+  box-shadow: 5px 5px 15px 5px #000000;
+  position: absolute;
+  top: 4em;
+  left: 2em;
+  z-index: 4;
+}
+.closeSuggestion{
+  right: 1em;
+  position: absolute;
+  z-index: 10;
+}
+.mainContent {
+  margin: 1em;
+}

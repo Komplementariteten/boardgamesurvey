@@ -1,0 +1,12 @@
+
+.searchList {
+}
+
+.searchItem {
+  margin: 0.2em;
+  padding: 0.4em;
+  font-weight: lighter;
+  list-style-type: none;
+  border: solid  1px rgb(87, 86, 86);
+  cursor: pointer;
+}

@@ -1,0 +1,10 @@
+.infotext{
+  padding: 3rem 1rem;
+  position: fixed;
+  bottom: 0px;
+}
+.hide-infotext{
+  position: absolute;
+  right: 0.5rem;
+  top: 0.2rem;
+}

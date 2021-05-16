@@ -12,6 +12,7 @@ import (
 
 type Server struct {
 	api *surveyApi
+	bbg *bbg
 	s   *http.Server
 }
 
@@ -31,6 +32,8 @@ func CreateNew(port int, staticFilePath string, config *lutra.LutraConfig) (*Ser
 	}
 	mux := http.NewServeMux()
 	s := &surveyApi{db: db}
+	bbg := &bbg{}
+	mux.Handle("/bbg/", http.StripPrefix("/bbg/", bbg))
 	mux.Handle("/survey/", http.StripPrefix("/survey/", s))
 	mux.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir(staticFilePath))))
 
@@ -39,7 +42,7 @@ func CreateNew(port int, staticFilePath string, config *lutra.LutraConfig) (*Ser
 		Handler: mux,
 	}
 
-	handle := &Server{api: s, s: server}
+	handle := &Server{api: s, s: server, bbg: bbg}
 
 	return handle, nil
 }

@@ -1,0 +1,38 @@
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-header-title" *ngIf="game?.Name != undefined">{{game?.Name}}</h3>
+    <h3 class="card-header-title" *ngIf="game?.Name == undefined">{{game?.Names}}</h3>
+  </div>
+  <div class="card-image">
+    <img class="game-image" src={{game?.Image}} />
+  </div>
+  <div class="card-content">
+    <button class="button block is-info" name="suggest" (click)="add()" >Zur Abstimmung vorschlagen</button>
+    <p class="block">
+      Spieler: {{game?.MinPlayers}} - {{game?.MaxPlayers}}
+    </p>
+    <div class="block">
+      <div class="field">
+        <label for="viewname">Anzeigename korrektur(aktuell: {{game?.Name}})</label><br />
+        <div class="control">
+          <div name="viewname" class="select">
+            <select (change)="nameChanged($event)" [(ngModel)]="selected">
+              <option *ngFor="let name of game.Names" >{{name}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a class="block button is-link" href="https://www.boardgamegeek.com/boardgame/{{game?.ObjectId}}" target="_blank">
+      <span class="icon">
+        <i class="fas fa-external-link-alt"></i>
+      </span>
+      <span>auf Boardgame Geek ansehen</span>
+    </a>
+    <div class="block">
+      <div class="tags" *ngFor="let tag of game?.Tags">
+        {{tag?.Value}}
+      </div>
+    </div>
+  </div>
+</div>
