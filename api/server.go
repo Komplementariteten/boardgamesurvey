@@ -14,6 +14,7 @@ type Server struct {
 	api *surveyApi
 	bbg *bbg
 	s   *http.Server
+	ws  *voteWebSocket
 }
 
 func (s *Server) Start() {
@@ -32,9 +33,13 @@ func CreateNew(port int, staticFilePath string, config *lutra.LutraConfig) (*Ser
 	}
 	mux := http.NewServeMux()
 	s := &surveyApi{db: db}
+	h := newHub()
+	go h.run()
+	ws := CreateVoteWs(db, h)
 	bbg := &bbg{}
 	mux.Handle("/bbg/", http.StripPrefix("/bbg/", bbg))
 	mux.Handle("/survey/", http.StripPrefix("/survey/", s))
+	mux.Handle("/ws", ws)
 	mux.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir(staticFilePath))))
 
 	server := &http.Server{

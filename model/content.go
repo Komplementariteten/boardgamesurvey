@@ -1,6 +1,7 @@
 package model
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -39,6 +40,30 @@ type ApiRequestResponse struct {
 	HttpStatusCode int
 	ContentType    string
 	Message        string
+}
+
+func JsonAsResponse(item interface{}) *ApiRequestResponse {
+	resp := &ApiRequestResponse{
+		Error:          false,
+		HttpStatusCode: http.StatusOK,
+		ContentType:    "application/json; charset=utf-8",
+	}
+	b, err := json.Marshal(item)
+	if err != nil {
+		resp.Error = true
+		resp.ContentType = "text/plain"
+		resp.Message = err.Error()
+		resp.HttpStatusCode = http.StatusInternalServerError
+	} else {
+		resp.Message = string(b[:])
+	}
+	return resp
+}
+
+func (resp *ApiRequestResponse) Write(w http.ResponseWriter) {
+	w.Header().Set(HeaderNameContentType, resp.ContentType)
+	w.WriteHeader(resp.HttpStatusCode)
+	io.WriteString(w, resp.Message)
 }
 
 func (c *Content) ToBsonD() *bson.D {
@@ -161,7 +186,9 @@ func checkJson(json []byte, response *ApiRequestResponse) *Content {
 		return nil
 	}
 	response.Error = false
-
+	response.HttpStatusCode = http.StatusOK
+	response.ContentType = "application/json; charset=utf-8"
+	response.Message = v.String()
 	return content
 }
 
@@ -189,5 +216,5 @@ func CheckJsonInHttp(r *http.Request) (*ApiRequestResponse, *Content) {
 	if response.Error {
 		return response, nil
 	}
-	return nil, content
+	return response, content
 }

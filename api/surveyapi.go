@@ -3,6 +3,7 @@ package api
 import (
 	"boardgamesurvey/model"
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -10,11 +11,13 @@ import (
 	"github.com/Komplementariteten/lutra/db"
 	"github.com/Komplementariteten/lutra/util"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-const knownSurveyId = "7jdksjf8238jfwajwf343.tsykp3q4wtwsa"
+const knownSurveyId = "7jdksjf8238jfwajwf343"
 const sessionCookieName = "SUS_"
 const surveyCollection = "LingenBrettspiel300EuroSurvey"
+const sessionCollection = "LingenBrettspiel300EuroSession"
 
 type surveyApi struct {
 	db *db.Db
@@ -23,13 +26,14 @@ type surveyApi struct {
 func startSession(w http.ResponseWriter) string {
 	sessId := util.GetRandomString(128)
 	sessCookie := &http.Cookie{
-		HttpOnly: true,
+		HttpOnly: false,
 		Secure:   false,
 		SameSite: http.SameSiteStrictMode,
 		Name:     sessionCookieName,
 		Path:     "/",
 		Expires:  time.Now().Local().Add(1488 * time.Hour),
 	}
+	sessCookie.Value = sessId
 	http.SetCookie(w, sessCookie)
 	return sessId
 }
@@ -47,31 +51,36 @@ func (api *surveyApi) set(w http.ResponseWriter, r *http.Request) {
 
 	resp, content := model.CheckJsonInHttp(r)
 	if resp.Error {
-		http.Error(w, "failed to read JSON in Request", http.StatusBadRequest)
+		http.Error(w, resp.Message, http.StatusBadRequest)
+		return
 	}
 
 	content.Owner = sessionName
 	bsonD := content.ToBsonD()
 	filter := &bson.M{model.ContentItemOwnerName: sessionName}
-	_, err = pool.Add(r.Context(), bsonD)
-	if err != nil {
+	_, err = pool.Get(r.Context(), filter)
+	if err == mongo.ErrNoDocuments {
+		_, err = pool.Add(r.Context(), bsonD)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	} else if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	m, err := pool.Get(r.Context(), filter)
-	bytes, err := bson.Marshal(m)
-	_, err = w.Write(bytes)
-	if err != nil {
+	_, err = pool.Update(r.Context(), filter, bsonD.Map())
+
+	if err != nil && err.Error() != "No Changes where made" {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-}
 
-func (api *surveyApi) addTestData() {
-
+	resp.Write(w)
 }
 
 func validateApiRequest(w http.ResponseWriter, r *http.Request, httpMethod string) (string, error) {
-	if r.Method != http.MethodGet {
+	if r.Method != http.MethodGet && r.Method != http.MethodPost {
 		http.Error(w, "Not supported", http.StatusNotImplemented)
 		return "", errors.New("Not supported")
 	}
@@ -111,27 +120,27 @@ func (api *surveyApi) get(w http.ResponseWriter, r *http.Request) {
 	}
 	searchContent := &bson.M{model.ContentItemOwnerName: sessionName}
 
-	resp, err := pool.Get(r.Context(), searchContent)
+	m, err := pool.Get(r.Context(), searchContent)
+	fmt.Printf("%v\n", m)
+	if err == mongo.ErrNoDocuments {
+		w.Write([]byte("{}"))
+		return
+	}
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	by, err := bson.Marshal(resp)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	_, err = w.Write(by)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+
+	resp := model.JsonAsResponse(m)
+	resp.Write(w)
 }
 
 func (api *surveyApi) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
-	if strings.HasPrefix(r.URL.Path, "get") {
+	if r.Method == http.MethodGet {
 		api.get(w, r)
 	}
-
+	if r.Method == http.MethodPost {
+		api.set(w, r)
+	}
 }

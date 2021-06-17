@@ -8,8 +8,8 @@ import { BoardGame } from './boardgame';
   providedIn: 'root'
 })
 export class BbgService {
-  bbgapiSearchUrl: string = "./bbg/search"
-  bbgapiDetailsUrl: string = "./bbg/game/"
+  bbgapiSearchUrl: string = "/bbg/search"
+  bbgapiDetailsUrl: string = "/bbg/game/"
   constructor(private httpClient: HttpClient) {   }
   search(name: string) {
     const sUrl = this.bbgapiSearchUrl + "?name=" + name;

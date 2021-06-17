@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Session } from '../session';
 import { ListService } from '../list.service';
+import { SessionService } from '../session.service';
 import { SurveyItem } from '../surveyitem';
 
 @Component({
@@ -11,11 +13,11 @@ export class SurveyComponent implements OnInit {
 
   showSearch: boolean = false;
   suggestGame: boolean = true;
-  constructor(public list:ListService) {
-    let sItem = new SurveyItem();
-    sItem.Title = "test this is a longer text which should break at some point so this keeps going on and on and on";
-    sItem.Description = "someDesc";
-    this.list.add(sItem);
+  constructor(public list:ListService, private sessionService: SessionService) {
+
+    this.sessionService.loadInitial().subscribe(s => {
+      this.list.initialize(s);
+    })
   }
 
   ngOnInit(): void {
