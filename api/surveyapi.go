@@ -17,7 +17,6 @@ import (
 const knownSurveyId = "7jdksjf8238jfwajwf343"
 const sessionCookieName = "SUS_"
 const surveyCollection = "LingenBrettspiel300EuroSurvey"
-const sessionCollection = "LingenBrettspiel300EuroSession"
 
 type surveyApi struct {
 	db *db.Db

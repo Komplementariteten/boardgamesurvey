@@ -14,7 +14,6 @@ export class SurveyComponent implements OnInit {
   showSearch: boolean = false;
   suggestGame: boolean = true;
   constructor(public list:ListService, private sessionService: SessionService) {
-
     this.sessionService.loadInitial().subscribe(s => {
       this.list.initialize(s);
     })

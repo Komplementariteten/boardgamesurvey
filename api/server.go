@@ -34,7 +34,7 @@ func CreateNew(port int, staticFilePath string, config *lutra.LutraConfig) (*Ser
 	mux := http.NewServeMux()
 	s := &surveyApi{db: db}
 	h := newHub()
-	go h.run()
+	go h.run(db)
 	ws := CreateVoteWs(db, h)
 	bbg := &bbg{}
 	mux.Handle("/bbg/", http.StripPrefix("/bbg/", bbg))

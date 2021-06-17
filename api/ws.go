@@ -2,6 +2,7 @@ package api
 
 import (
 	"boardgamesurvey/model"
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -10,6 +11,9 @@ import (
 
 	"github.com/Komplementariteten/lutra/db"
 	"github.com/gorilla/websocket"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const (
@@ -25,6 +29,10 @@ const (
 	// Maximum message size allowed from peer.
 	maxMessageSize = 2048
 )
+const sessionCollection = "LingenBrettspiel300EuroSession"
+const sessionName = "bgsurvey"
+const sessionField = "session"
+const dataField = "data"
 
 type voteWebSocket struct {
 	db   *db.Db
@@ -56,6 +64,10 @@ type client struct {
 	send chan []byte
 }
 
+type state struct {
+	data []byte
+}
+
 var (
 	newline  = []byte{'\n'}
 	space    = []byte{' '}
@@ -74,20 +86,43 @@ func newHub() *hub {
 	}
 }
 
-func (h *hub) run() {
-	poll := make([]byte, 0)
+func (h *hub) run(db *db.Db) {
+	ctx := context.Background()
+	p, err := db.Collection(ctx, sessionCollection)
+	if err != nil {
+		panic(err)
+	}
+	m, err := p.Get(ctx, &bson.M{sessionField: sessionName})
+	if err != nil && err != mongo.ErrNoDocuments {
+		panic(err)
+	}
+
+	poll := make(map[string]interface{})
+	poll[sessionField] = sessionName
+	poll[dataField] = make([]byte, 0)
+	if m != nil {
+		poll[dataField] = primitive.Binary((m[dataField].(primitive.Binary))).Data
+	} else {
+		p.AddM(ctx, &bson.M{sessionField: sessionName, dataField: poll[dataField]})
+	}
 	for {
 		select {
 		case client := <-h.register:
 			h.clients[client] = true
-			client.send <- poll
+			if len(poll[dataField].([]byte)) > 0 {
+				client.send <- poll[dataField].([]byte)
+			}
 		case client := <-h.unregister:
 			if _, ok := h.clients[client]; ok {
 				delete(h.clients, client)
 				close(client.send)
 			}
 		case message := <-h.broadcast:
-			poll = message
+			poll[dataField] = message
+			_, err = p.Update(ctx, &bson.M{sessionField: sessionName}, poll)
+			if err != nil {
+				fmt.Printf("Database update error: %v\n", err)
+			}
 			fmt.Printf("got message %v\n", message)
 			for client := range h.clients {
 				fmt.Println("notifieing client")
