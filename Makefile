@@ -7,7 +7,8 @@ server: ui
 dist: server
 	cp -R static docker/dist/
 docker: dist
-	docker build -t boardgamesurvey:v0.2 docker/
+	docker build -t boardgamesurvey:v0.3
+	 docker/
 clean: 
 	rm -rf docker/dist
 	rm -rf bin
