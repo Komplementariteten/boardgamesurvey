@@ -20,10 +20,12 @@ export class VoteItem {
   public ObjectId: number = 0;
   public Title: string | undefined;
   public Votes: number = 0;
+  public Description : string | undefined;
 }
 
 export class Vote {
   public Title: string = "";
   public Owner: string = "";
+  public Description: string = "";
   public ObjectId: number = -1;
 }

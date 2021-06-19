@@ -95,7 +95,7 @@ func (t *Thing) ToGameThing() *GameThing {
 
 func (bbg *bbg) searchBBG(searchParams map[string][]string) (*Results, error) {
 	if name, ok := searchParams[apiTextSearchParam]; ok {
-		reqUrl := fmt.Sprintf("%s=%s", bbgApiSearchUrl, name[0])
+		reqUrl := fmt.Sprintf("%s=%s", bbgApiSearchUrl, url.QueryEscape(name[0]))
 		resp, err := http.Get(reqUrl)
 		if err != nil {
 			return nil, err

@@ -12,8 +12,6 @@ import (
 	"github.com/Komplementariteten/lutra/db"
 	"github.com/gorilla/websocket"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const (
@@ -86,25 +84,8 @@ func newHub() *hub {
 	}
 }
 
-func (h *hub) run(db *db.Db) {
+func (h *hub) run(p *db.Pool, poll map[string]interface{}) {
 	ctx := context.Background()
-	p, err := db.Collection(ctx, sessionCollection)
-	if err != nil {
-		panic(err)
-	}
-	m, err := p.Get(ctx, &bson.M{sessionField: sessionName})
-	if err != nil && err != mongo.ErrNoDocuments {
-		panic(err)
-	}
-
-	poll := make(map[string]interface{})
-	poll[sessionField] = sessionName
-	poll[dataField] = make([]byte, 0)
-	if m != nil {
-		poll[dataField] = primitive.Binary((m[dataField].(primitive.Binary))).Data
-	} else {
-		p.AddM(ctx, &bson.M{sessionField: sessionName, dataField: poll[dataField]})
-	}
 	for {
 		select {
 		case client := <-h.register:
@@ -119,7 +100,7 @@ func (h *hub) run(db *db.Db) {
 			}
 		case message := <-h.broadcast:
 			poll[dataField] = message
-			_, err = p.Update(ctx, &bson.M{sessionField: sessionName}, poll)
+			_, err := p.Update(ctx, &bson.M{sessionField: sessionName}, poll)
 			if err != nil {
 				fmt.Printf("Database update error: %v\n", err)
 			}
@@ -137,10 +118,10 @@ func (h *hub) run(db *db.Db) {
 	}
 }
 
-func CreateVoteWs(db *db.Db, h *hub) *voteWebSocket {
+func CreateVoteWs(db *db.Db, h *hub, poll *model.Poll) *voteWebSocket {
 	ws := &voteWebSocket{
 		db:   db,
-		poll: &model.Poll{Votes: make([]model.VoteCount, 0)},
+		poll: poll,
 		ctrl: make(chan bool),
 		hub:  h,
 	}
@@ -185,7 +166,7 @@ func (c *client) wsReader(ws *voteWebSocket) {
 			}
 		}
 		if isNew {
-			newVote := model.VoteCount{
+			newVote := &model.VoteCount{
 				Title:    vote.Title,
 				Votes:    1,
 				ObjectId: vote.ObjectId,

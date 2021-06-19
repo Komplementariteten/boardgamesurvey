@@ -14,6 +14,7 @@
   <div class="block">
     <h2 class="subtitle">Suchergebnisse</h2>
     <progress class="progress is-small is-info" max="100" *ngIf="isSearching">15%</progress>
+    <div *ngIf="searchHasError" class="notification is-warning">Suche ist leider fehlgeschlagen!</div>
     <ul class="searchList" *ngIf="!selectionIsShown">
       <li class="searchItem" *ngFor="let item of items" (click)="onItemSelect(item)">{{item.Name}}&nbsp;<b>{{item.Published}}</b></li>
     </ul>

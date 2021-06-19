@@ -13,14 +13,13 @@ import { WebsocketService } from './websocket.service';
 export class ListService {
 
   public items: SurveyItem[];
-  private games: BoardGame[];
   private session: Session = new Session();
-  private votes: string[] = [];
+  public votes: number = 0;
   private initialized: boolean = false;
+  private voteStore: string = "bgsurveyvotes";
 
   constructor(private sessionService: SessionService, private websocketService: WebsocketService, private bbgService: BbgService) {
     this.items = [];
-    this.games = [];
     this.websocketService.connect();
     let eventEmiter = this.websocketService.getEventListener();
     eventEmiter.subscribe((ev: VoteEvent) => {
@@ -50,35 +49,47 @@ export class ListService {
     }
     this.initialized = true;
     this.session.FromApiSession(s);
-    if (this.session[VoteObjectName]) {
-      const votes = this.session[VoteObjectName];
-      const votesMap = <string[]>votes;
-      if (votes != undefined) {
-        this.votes = votesMap;
-      }
+    const voteStr = localStorage.getItem(this.voteStore);
+    if (voteStr === null){
+      localStorage.setItem(this.voteStore, this.votes.toString());
+    } else {
+      this.votes = <number><any>voteStr;
     }
+    console.log(this.votes);
+  }
+  private localVote() {
+    localStorage.setItem(this.voteStore, this.votes.toString());
+    this.votes++;
   }
   canVote(): boolean {
-    return this.votes.length < MaxNumberOfVotes;
+    return this.votes < MaxNumberOfVotes;
   }
   vote(item: SurveyItem){
     let vote = new Vote();
     vote.Title = item.Title!;
+    vote.Description = item.Description!;
     vote.Owner = this.sessionService.getSessionId();
     if(item.Ref !== undefined){
       vote.ObjectId = item.Ref.ObjectId!;
     }
     this.websocketService.send(vote);
+    this.localVote();
   }
   add(item: SurveyItem) {
-    this.items.push(item);
+    let vote = new Vote();
+    vote.Title = item.Title!;
+    vote.ObjectId = -1;
+    vote.Description = item.Description!;
+    vote.Owner = this.sessionService.getSessionId();
+    this.websocketService.send(vote);
+    this.localVote();
   }
   addGame(game: BoardGame) {
-    this.games.push(game);
-    let item = new SurveyItem();
-    item.Ref = game;
-    item.Description = game.Description;
-    item.Title = game.Name;
-    this.items.push(item);
+    let vote = new Vote();
+    vote.Title = game.Name!;
+    vote.ObjectId = game.ObjectId!;
+    vote.Owner = this.sessionService.getSessionId();
+    this.websocketService.send(vote);
+    this.localVote();
   }
 }

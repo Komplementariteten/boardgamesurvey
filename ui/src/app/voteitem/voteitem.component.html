@@ -1,5 +1,11 @@
 <div class="voteitem box">
+  <div >
+    <span class="icon" >
+      <i  *ngIf="item?.Ref === undefined" class="fas fa-crown"></i>
+      <i  *ngIf="item?.Ref != undefined" class="fas fa-dice"></i>
+    </span>&nbsp;
   <a class="clickable" (click)="showInfo=!showInfo" >{{item?.Title}}&nbsp;</a>
+  </div>
   <div class="itemDesc message" *ngIf="showInfo">
     <div class="message-header">Beschreibung</div>
     <div class="message-body" *ngIf="item?.Ref != undefined">

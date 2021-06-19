@@ -1,19 +1,27 @@
 <div class="columns">
   <div class="column">
+    <div class="vote-header notification is-warning">
+Du hast {{maxNumberOfVotes - list.votes}} von {{maxNumberOfVotes}} Stimmen
+    </div>
     <div class="content is-normal">
     <h1 class="title">Abstimmung</h1>
+    <div *ngIf="list.items.length > 0">
     <ul class="surveyList">
-      <li class="vote-item" *ngFor="let item of list.items">
+      <li class="vote-item block" *ngFor="let item of list.items">
         <app-voteitem [item]="item"></app-voteitem>
       </li>
     </ul>
+  </div>
+  <div *ngIf="list.items.length == 0">
+    Abstimmungshinweis
+  </div>
   </div>
   </div>
   <div class="column">
     <div class="card">
       <div class="card-header">
         <div class="block">
-          <h2 class="card-header-title">Vorschlag erstellen</h2>
+          <h2 class="card-header-title">Neuen Vorschlag erstellen</h2>
         </div>
       </div>
       <div class="card-content">

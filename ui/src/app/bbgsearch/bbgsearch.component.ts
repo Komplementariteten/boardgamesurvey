@@ -1,4 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import {BbgService} from '../bbg.service'
 import { BoardGame } from '../boardgame';
 import { SearchItem } from '../searchitem';
@@ -13,6 +16,7 @@ export class BbgsearchComponent implements OnInit {
   searchText: string
   items: SearchItem[] | undefined
   isSearching: boolean = false
+  searchHasError: boolean = false;
   selectedGame: BoardGame | undefined
   selectionIsShown: boolean = false
   constructor(private bbgService: BbgService) {
@@ -32,12 +36,20 @@ export class BbgsearchComponent implements OnInit {
       this.selectionIsShown = true;
     });
   }
-
+  private handleError(error: HttpErrorResponse) {
+    this.searchHasError = true;
+    console.log("search Error");
+    return [];
+  }
   public onSearch(event: Event) {
     if (this.searchText.length > 3) {
       this.isSearching = true
       this.bbgService.search(this.searchText).subscribe(i => {
-        this.items = i;
+        if(i.length > 0){
+          this.items = i;
+        } else {
+          this.searchHasError = true;
+        }
         this.isSearching = false
       });
     }
