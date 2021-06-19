@@ -1,4 +1,4 @@
-#syntax=docker/dockerfile:0.2
+#syntax=docker/dockerfile:1.0
 FROM alpine:latest
 # RUN apk update
 # RUN apk add mongodb yaml-cpp
