@@ -8,14 +8,13 @@ import { BbgsearchComponent } from './bbgsearch/bbgsearch.component';
 import { FormsModule } from '@angular/forms';
 import { GameComponent } from './game/game.component';
 import { SurveyComponent } from './survey/survey.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { VoteitemComponent } from './voteitem/voteitem.component'
 import {MatIconModule} from '@angular/material/icon';
 import {MatTabsModule} from '@angular/material/tabs';
 import { CategorieComponent } from './categorie/categorie.component';
 import { DelayedInputModule } from './delayed-input/delayed-input.module';
 import { InfotextComponent } from './infotext/infotext.component';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -36,7 +35,7 @@ import { InfotextComponent } from './infotext/infotext.component';
     AppRoutingModule,
     DelayedInputModule,
     MatIconModule,
-    NoopAnimationsModule
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

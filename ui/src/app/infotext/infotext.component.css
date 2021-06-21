@@ -2,9 +2,16 @@
   padding: 3rem 1rem;
   position: fixed;
   bottom: 0px;
+  z-index: 50;
 }
 .hide-infotext{
   position: absolute;
   right: 0.5rem;
   top: 0.2rem;
+}
+.scroll-down-note{
+  padding: 3rem 1rem;
+  position: fixed;
+  bottom: 0px;
+  z-index: 100;
 }

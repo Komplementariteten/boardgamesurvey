@@ -7,7 +7,7 @@
     <img class="game-image" src={{game?.Image}} />
   </div>
   <div class="card-content">
-    <button class="button block is-info" name="suggest" (click)="add()" >Für dieses Spiel Stimmen</button>
+    <button class="button block is-info" name="suggest" (click)="prepareAdd()" >vorschlagen</button>
     <p class="block">
       Spieler: {{game?.MinPlayers}} - {{game?.MaxPlayers}}
     </p>
@@ -35,4 +35,17 @@
       </div>
     </div>
   </div>
+</div>
+<div class="modal" [style.display]="gameSelected ? 'block' : 'none'">
+  <div class="modal-background"></div>
+  <div class="modal-content suggestion-content">
+    <div class="box">
+      <h3 class="title">Name: {{game?.Name}}</h3>
+      <img class="game-image block" src={{game?.Image}} />
+      <div class="control">
+        <button class="button block is-info" (click)="add()">Für dieses Spiel stimmen</button>
+      </div>
+    </div>
+  </div>
+  <button class="modal-close is-large" aria-label="close" (click)="gameSelected = false"></button>
 </div>

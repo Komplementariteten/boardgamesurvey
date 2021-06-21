@@ -1,5 +1,10 @@
+<div class="scroll-down-note has-text-danger" *ngIf="hasScrollbar" >
+  <span class="icon is-size-1" [@animateArrow]="showInfoText ? 'nope' : 'initial'">
+    <i class="fas fa-arrow-down" ></i>
+  </span>
+</div>
 <footer class="footer infotext" *ngIf="showInfoText">
-  <button class="hide-infotext button is-danger is-outlined" (click)="showInfoText=false">
+  <button class="hide-infotext button is-danger is-outlined" [@highlighHideButton]="bounceInfoText" (click)="hideInfoText()">
     <span>Ausblenden</span>
     <span class="icon is-small">
       <i class="fas fa-times"></i>

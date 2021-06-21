@@ -10,6 +10,7 @@ import (
 func main() {
 
 	cfg := &lutra.LutraConfig{
+		// MongoDbConnectionStr: "mongodb://localhost/defaultDatabase?retryWrites=true&w=majority",
 		MongoDbConnectionStr: "mongodb://mongo-host/defaultDatabase?retryWrites=true&w=majority",
 		MongoDbName:          "lingen-boardgame-survey",
 	}

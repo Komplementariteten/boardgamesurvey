@@ -12,7 +12,11 @@ export class GameComponent implements OnInit {
   @Input() game: BoardGame = new BoardGame();
 
   selected: string = "";
+  gameSelected: boolean = false;
   constructor(private list: ListService) { }
+  prepareAdd() {
+    this.gameSelected = true;
+  }
 
   ngOnInit(): void {
     this.selected = this.game.Name!;

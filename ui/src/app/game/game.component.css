@@ -14,3 +14,8 @@
 .game-image{
   margin: 0.6em;
 }
+.suggestion-content{
+  background-color: white;
+  margin: 2em;
+  padding: 1em;
+}
