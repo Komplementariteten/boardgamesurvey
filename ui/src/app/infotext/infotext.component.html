@@ -4,12 +4,6 @@
   </span>
 </div>
 <footer class="footer infotext" *ngIf="showInfoText">
-  <button class="hide-infotext button is-danger is-outlined" [@highlighHideButton]="bounceInfoText" (click)="hideInfoText()">
-    <span>Ausblenden</span>
-    <span class="icon is-small">
-      <i class="fas fa-times"></i>
-    </span>
-  </button>
   <div class="content">
     <div class="columns">
       <div class="column">
@@ -44,4 +38,10 @@
       </div>
     </div>
   </div>
+  <button class="hide-infotext button is-danger" [@highlighHideButton]="bounceInfoText" (click)="hideInfoText()">
+    <span>Ausblenden</span>
+    <span class="icon is-small">
+      <i class="fas fa-times"></i>
+    </span>
+  </button>
 </footer>

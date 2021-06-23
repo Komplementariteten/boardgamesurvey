@@ -5,5 +5,5 @@ FROM alpine:latest
 
 COPY ./dist /app
 WORKDIR /app
-EXPOSE 6100
+EXPOSE 6100 6100
 ENTRYPOINT ["/app/boardgamesurvey"]
