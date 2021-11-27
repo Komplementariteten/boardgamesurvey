@@ -17,7 +17,6 @@ export class SessionService {
   save(s: Session) {
     const js = s.ToApiSession();
     return;
-    return this.httpClient.post("/survey/7jdksjf8238jfwajwf343", js);
   }
   createNew() {
     const s =  new Session();

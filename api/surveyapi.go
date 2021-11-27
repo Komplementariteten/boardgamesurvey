@@ -16,6 +16,7 @@ import (
 
 const knownSurveyId = "7jdksjf8238jfwajwf343"
 const sessionCookieName = "SUS_"
+const adminCookieName = "AD_N"
 const surveyCollection = "LingenBrettspiel300EuroSurvey"
 
 type surveyApi struct {
@@ -34,6 +35,21 @@ func startSession(w http.ResponseWriter) string {
 	}
 	sessCookie.Value = sessId
 	http.SetCookie(w, sessCookie)
+	return sessId
+}
+
+func startAdminSession(w http.ResponseWriter) string {
+	sessId := model.AdminToken
+	adminCookie := &http.Cookie{
+		HttpOnly: false,
+		Secure:   false,
+		SameSite: http.SameSiteStrictMode,
+		Name:     adminCookieName,
+		Path:     "/AA5693KJD=_93jd2q345SA",
+		Expires:  time.Now().Local().Add(1488 * time.Hour),
+	}
+	adminCookie.Value = sessId
+	http.SetCookie(w, adminCookie)
 	return sessId
 }
 
@@ -95,6 +111,17 @@ func validateApiRequest(w http.ResponseWriter, r *http.Request, httpMethod strin
 	if err == nil {
 		sessionName = c.Value
 	}
+
+	referer := r.Header.Get("Referer")
+	if strings.Contains(referer, model.AdminUrl) {
+		_, err := r.Cookie(adminCookieName)
+
+		if err == http.ErrNoCookie {
+			sessionName = startAdminSession(w)
+		}
+
+	}
+
 	if err == http.ErrNoCookie {
 		sessionName = startSession(w)
 		return sessionName, nil
@@ -103,6 +130,7 @@ func validateApiRequest(w http.ResponseWriter, r *http.Request, httpMethod strin
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return "", err
 	}
+
 	return sessionName, nil
 }
 

@@ -18,6 +18,8 @@ const ContentItemContentName = "Content"
 const ContentItemCollectionName = "Collection"
 const ContentItemOwnerName = "Owner"
 const ContentTypeMap = "map"
+const AdminToken = "JEF9023UF23ß9RJFPJQWAU9F09ß3QFUEPJF3U490UFJAPÄQFÄOKQEIJFJUFQJF09Q3"
+const AdminUrl = "/AA5693KJD=_93jd2q345SA"
 
 type ContentType interface {
 	ToBsonD() *bson.D

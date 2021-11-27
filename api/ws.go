@@ -167,10 +167,16 @@ func (c *client) wsReader(ws *voteWebSocket) {
 		}
 		if isNew {
 			newVote := &model.VoteCount{
-				Title:    vote.Title,
-				Votes:    1,
-				ObjectId: vote.ObjectId,
-				Voters:   []string{vote.Owner},
+				Title:         vote.Title,
+				Votes:         1,
+				ObjectId:      vote.ObjectId,
+				Disabled:      false,
+				DisableReason: "",
+				Voters:        []string{vote.Owner},
+			}
+			if vote.Admin == model.AdminToken {
+				newVote.Disabled = vote.Disable
+				newVote.DisableReason = vote.DisableReason
 			}
 			ws.poll.Votes = append(ws.poll.Votes, newVote)
 		}

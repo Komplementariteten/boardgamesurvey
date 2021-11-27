@@ -75,6 +75,7 @@ func CreateNew(port int, staticFilePath string, config *lutra.LutraConfig) (*Ser
 	mux.Handle("/survey/", http.StripPrefix("/survey/", s))
 	mux.Handle("/ws", ws)
 	mux.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir(staticFilePath))))
+	mux.Handle(model.AdminUrl, http.StripPrefix(model.AdminUrl, http.FileServer(http.Dir(staticFilePath))))
 
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%d", port),
